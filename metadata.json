@@ -1,0 +1,7 @@
+{
+  "name": "New Test Grader",
+  "description": "A professional AI-powered exam grading application that allows teachers to create master keys, scan student papers via camera or file upload, and receive instant, accurate results including scores and percentages.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
