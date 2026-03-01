@@ -16,6 +16,10 @@ const Scanner: React.FC<ScannerProps> = ({ exam, onComplete, onBack }) => {
   const [processStep, setProcessStep] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isMobile] = useState(() => {
+    if (typeof navigator === 'undefined') return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  });
 
   const processImage = async (file: File) => {
     setIsProcessing(true);
@@ -148,8 +152,14 @@ const Scanner: React.FC<ScannerProps> = ({ exam, onComplete, onBack }) => {
               </div>
               
               <div className="space-y-3">
-                <h3 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">Ready for Scan</h3>
-                <p className="text-slate-500 font-medium text-sm">Position the sheet clearly in good lighting for the fastest results.</p>
+                <h3 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                  {isMobile ? "Take a Photo" : "Upload Sheet"}
+                </h3>
+                <p className="text-slate-500 font-medium text-sm">
+                  {isMobile 
+                    ? "Position the sheet clearly and take a steady photo." 
+                    : "Select a clear image of the answer sheet for processing."}
+                </p>
               </div>
 
               {error && (
@@ -168,7 +178,7 @@ const Scanner: React.FC<ScannerProps> = ({ exam, onComplete, onBack }) => {
                 className="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-5 px-8 rounded-[2rem] flex items-center justify-center gap-4 shadow-2xl transition-all active:scale-95 text-xl tracking-tight"
               >
                 <Camera size={28} strokeWidth={3} />
-                Start Capture
+                {isMobile ? "Open Camera" : "Choose File"}
               </button>
 
               <div className="flex flex-col gap-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
@@ -182,7 +192,14 @@ const Scanner: React.FC<ScannerProps> = ({ exam, onComplete, onBack }) => {
                  </div>
               </div>
 
-              <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" capture="environment" className="hidden" />
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                accept="image/*" 
+                capture={isMobile ? "environment" : undefined} 
+                className="hidden" 
+              />
             </motion.div>
           )}
         </AnimatePresence>
